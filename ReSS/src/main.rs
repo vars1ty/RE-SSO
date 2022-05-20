@@ -49,7 +49,7 @@ pub struct Layer {
 impl Default for Layer {
     fn default() -> Self {
         Self {
-            path: "".to_string(),
+            path: ui::read_cache(),
             raw_logo: RetainedImage::from_image_bytes("../assets/logo.png", include_bytes!("../assets/logo.png")).unwrap(),
         }
     }

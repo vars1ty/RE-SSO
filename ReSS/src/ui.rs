@@ -1,3 +1,5 @@
+use std::fs::File;
+use std::io::{Read, Write};
 use std::path::Path;
 use std::process::Command;
 
@@ -79,7 +81,7 @@ fn open_process(directory: &str, file: &str) {
 ///
 /// ```
 /// fn main() {
-///    display_notification("Summary", "Text Body");
+///    open_process("Z:\\Path", "File.exe");
 /// }
 /// ```
 fn display_notification(summary: &str, text: &str) {
@@ -114,11 +116,12 @@ fn check_path(path: &String, ui: &mut Ui) {
         ui.label("Waiting...");
         return;
     }
-    if exists(path) {
+    if !exists(path) {
         ui.label(format!("Path: '{}' contains '{}', ready to launch!", path, RUNTIME));
         if ui.button("Launch").clicked() {
+            write_cache(path);
             display_notification(RUNTIME, "Launching, please open POS.22.exe as soon as you see the loading screen!");
-            open_process(path, RUNTIME);
+            //open_process(path, RUNTIME);
         }
     } else {
         ui.label(format!("Path '{}' does not contain '{}', please try a different path!", path, RUNTIME));
@@ -133,3 +136,55 @@ fn check_path(path: &String, ui: &mut Ui) {
 ///
 /// returns: bool
 fn exists(path: &String) -> bool { Path::new(&path).join(RUNTIME).is_file() }
+
+/// Checks if the `cache.dat` file is present or not.
+fn cache_exists() -> bool { Path::new("cache.dat").is_file() }
+
+/// Attempts to write to the cache file.
+///
+/// # Arguments
+///
+/// * `str`: String to write to the cache file.
+///
+/// returns: () - If the File::Create or File.write_all operation failed, returns an error in the console.
+fn write_cache(str: &str) {
+    let mut file = match File::create("cache.dat") {
+        Ok(file) => file,
+        Err(e) => {
+            display_notification("std::fs", format!("Error upon calling write_cache (File::create): {}", e).as_str());
+            println!("Error upon calling write_cache (File::create): {}", e);
+            return;
+        }
+    };
+    match file.write_all(str.as_bytes()) {
+        Ok(_) => (),
+        Err(e) => {
+            display_notification("std::fs", format!("Error upon calling write_cache (File.write_all): {}", e).as_str());
+            println!("Error upon calling write_cache (File.write_all): {}", e);
+            return;
+        }
+    }
+}
+
+/// Attempts to read from the cache file.
+pub fn read_cache() -> String {
+    if !cache_exists() { return "".to_string(); }
+    let mut file = match File::open("cache.dat") {
+        Ok(file) => file,
+        Err(e) => {
+            display_notification("std::fs", format!("Error upon calling read_cache (File::open): {}", e).as_str());
+            println!("Error upon calling read_cache (File::open): {}", e);
+            return "".to_string();
+        }
+    };
+    let mut contents = String::new();
+    match file.read_to_string(&mut contents) {
+        Ok(_) => (),
+        Err(e) => {
+            display_notification("std::fs", format!("Error upon calling read_cache (File.read_to_string): {}", e).as_str());
+            println!("Error upon calling read_cache (File.read_to_string): {}", e);
+            return "".to_string();
+        }
+    }
+    contents
+}
