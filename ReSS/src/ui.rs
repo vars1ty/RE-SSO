@@ -81,7 +81,7 @@ fn open_process(directory: &str, file: &str) {
 ///
 /// ```
 /// fn main() {
-///    open_process("Z:\\Path", "File.exe");
+///    display_notification("Summary", "Text Body");
 /// }
 /// ```
 fn display_notification(summary: &str, text: &str) {
@@ -116,12 +116,12 @@ fn check_path(path: &String, ui: &mut Ui) {
         ui.label("Waiting...");
         return;
     }
-    if !exists(path) {
+    if exists(path) {
         ui.label(format!("Path: '{}' contains '{}', ready to launch!", path, RUNTIME));
         if ui.button("Launch").clicked() {
             write_cache(path);
             display_notification(RUNTIME, "Launching, please open POS.22.exe as soon as you see the loading screen!");
-            //open_process(path, RUNTIME);
+            open_process(path, RUNTIME);
         }
     } else {
         ui.label(format!("Path '{}' does not contain '{}', please try a different path!", path, RUNTIME));
