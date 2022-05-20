@@ -43,7 +43,6 @@ fn main() {
 pub struct Layer {
     pub path: String,
     pub raw_logo: RetainedImage,
-    pub raw_bg: RetainedImage,
 }
 
 /// Default values for the Layer struct.
@@ -52,7 +51,6 @@ impl Default for Layer {
         Self {
             path: "".to_string(),
             raw_logo: RetainedImage::from_image_bytes("../assets/logo.png", include_bytes!("../assets/logo.png")).unwrap(),
-            raw_bg: RetainedImage::from_image_bytes("../assets/bg.png", include_bytes!("../assets/bg.png")).unwrap(),
         }
     }
 }
