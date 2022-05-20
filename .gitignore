@@ -2,8 +2,9 @@
 # will have compiled files and executables
 ReSS/target/
 
-# Remove the cache.dat file
+# Remove the cache.dat file along with the .idea directory
 ReSS/cache.dat
+ReSS/.idea
 
 # Remove Cargo.lock from gitignore if creating an executable, leave it for libraries
 # More information here https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html
