@@ -79,7 +79,7 @@ fn open_process(directory: &str, file: &str) {
 ///
 /// ```
 /// fn main() {
-///    open_process("Z:\\Path", "File.exe");
+///    display_notification("Summary", "Text Body");
 /// }
 /// ```
 fn display_notification(summary: &str, text: &str) {
